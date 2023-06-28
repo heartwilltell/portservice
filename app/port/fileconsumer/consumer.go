@@ -16,7 +16,7 @@ func New(files ...string) *Consumer {
 	return &c
 }
 
-func (c *Consumer) Close() error { return nil }
+func (*Consumer) Close() error { return nil }
 
 func (c *Consumer) Consume(ctx context.Context) (string, error) {
 	if ctx.Err() != nil {

@@ -17,10 +17,10 @@ type Storage struct {
 // New returns a pointer to a new instance of Storage.
 func New() *Storage { return &Storage{store: make(map[string]*port.Port)} }
 
-func (s *Storage) WritePort(_ context.Context, id string, port *port.Port) error {
+func (s *Storage) WritePort(_ context.Context, id string, p *port.Port) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	s.store[id] = port
+	s.store[id] = p
 	return nil
 }

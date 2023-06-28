@@ -58,8 +58,7 @@ func main() {
 	}
 
 	if err := cmd.RunContext(ctx, os.Args); err != nil {
-		fmt.Printf("\nError: %s\n", err.Error())
-		os.Exit(1)
+		panic(err)
 	}
 }
 

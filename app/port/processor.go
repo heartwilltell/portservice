@@ -35,18 +35,18 @@ type Storage interface {
 	WritePort(ctx context.Context, id string, port *Port) error
 }
 
-// JsonFileProcessor implements Processor interface
+// JSONFileProcessor implements Processor interface
 // for json files which it reads as a single batch.
-type JsonFileProcessor struct {
+type JSONFileProcessor struct {
 	storage Storage
 }
 
-// NewProcessor returns a pointer to a new instance of JsonFileProcessor.
-func NewProcessor(storage Storage) *JsonFileProcessor {
-	return &JsonFileProcessor{storage: storage}
+// NewProcessor returns a pointer to a new instance of JSONFileProcessor.
+func NewProcessor(storage Storage) *JSONFileProcessor {
+	return &JSONFileProcessor{storage: storage}
 }
 
-func (p *JsonFileProcessor) Process(ctx context.Context, filePath string) (bErr error) {
+func (p *JSONFileProcessor) Process(ctx context.Context, filePath string) (bErr error) {
 	f, openErr := os.Open(filePath)
 	if openErr != nil {
 		return fmt.Errorf("json file streamer: open '%s' file: %w", filePath, openErr)
@@ -100,7 +100,7 @@ func (p *JsonFileProcessor) Process(ctx context.Context, filePath string) (bErr 
 	return nil
 }
 
-func (p *JsonFileProcessor) handleOpenCloseDelimiter(decoder *json.Decoder) error {
+func (*JSONFileProcessor) handleOpenCloseDelimiter(decoder *json.Decoder) error {
 	token, err := decoder.Token()
 	if err != nil {
 		return fmt.Errorf("handle open/close delimiter: %w", err)
