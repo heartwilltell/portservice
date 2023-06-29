@@ -1,0 +1,27 @@
+# Builder layer
+FROM golang:1.20-alpine AS BUILDER
+
+ARG BRANCH
+ARG COMMIT
+
+RUN apk add --no-cache ca-certificates build-base git && mkdir -p /app
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X main.Branch=$BRANCH -X main.Commit=$COMMIT" -o service ./cmd
+
+# Final layer
+FROM alpine:latest
+
+RUN addgroup -S application && adduser -S -G application application
+
+WORKDIR /home/application
+
+COPY --from=BUILDER /app/service /home/application/service
+
+RUN chown application:application /home/application
+
+USER application
+
+ENTRYPOINT ["/home/application/service"]
